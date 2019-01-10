@@ -1,0 +1,62 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font: 16px Lucida Console;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font: 14px Lucida Console;
+}
+
+header {
+    text-align: center;
+    background: black;
+    color: #fff;
+    padding: 10px;
+  }
+
+footer {
+    justify-content: end;
+    padding: 10px;
+    margin-top: 23%;
+    text-align: center;
+    font-size: 11px;
+    background: black;
+    color: white;
+}
+
+nav {
+    margin-top: 15%;
+    display: flex;
+    flex-flow: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    width: 150px;
+    margin: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    background: white;
+    padding: 10px 40px;
+    color: black;  
+  }
+
+.btn:hover{
+    color:white;
+    background:black;
+}
+
+.btn a{
+    text-decoration: none;
+}

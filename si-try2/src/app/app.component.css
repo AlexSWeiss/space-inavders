@@ -1,0 +1,41 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font: 16px sans-serif;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font: 14px Lucida Console;
+}
+
+header {
+    text-align: center;
+    background: black;
+    color: #fff;
+    padding: 10px;
+  }
+
+  .btn {
+    border-radius: 3px;
+    box-shadow: 0 2px rgba(0, 0, 0, 0.15);
+    background: black;
+    padding: 10px 40px;
+    color: white;
+  }
+  
+  .header .btn{  
+    float: right;
+    border: 1px solid white;
+    border-radius: 3px;
+    background: white;
+    padding: 10px 40px;
+    color: black;  
+  }
