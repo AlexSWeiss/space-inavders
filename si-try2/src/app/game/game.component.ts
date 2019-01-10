@@ -56,9 +56,9 @@ export class GameComponent implements OnInit {
       );
     }
 
-    function setPosition(obj:HTMLElement, x:number, y:number) {
+    function setPosition(obj: HTMLElement, x: number, y: number) {
       obj.style.transform = `translate(${x}px, ${y}px)`
-      
+
     }
 
     function clamp(v, min, max) {
@@ -78,26 +78,27 @@ export class GameComponent implements OnInit {
     }
 
     //Hero logic
-    function createHero($container:HTMLElement) {
+    function createHero($container) {
       GAME_STATE.heroX = GAME_WIDTH / 2;
       GAME_STATE.heroY = GAME_HEIGHT - 50;
       const $hero = document.createElement("img");
       $hero.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/hero.png?raw=true";
-      $hero.className = "hero"
+      $hero.className = "hero";
       $hero.style.width = "40px";
       $hero.style.marginLeft = "-20px";
+      $hero.style.position = "absolute";
       $container.appendChild($hero);
       setPosition($hero, GAME_STATE.heroX, GAME_STATE.heroY)
     }
 
 
-    function destroyHero($container:HTMLElement, hero) {
+    function destroyHero($container, hero) {
 
       $container.removeChild(hero);
       GAME_STATE.gameOver = true;
     }
 
-    function updateHero(dt, $container:HTMLElement) {
+    function updateHero(dt, $container) {
       if (GAME_STATE.leftPressed) {
         GAME_STATE.heroX -= dt * hero_MAX_SPEED;
       }
@@ -119,28 +120,30 @@ export class GameComponent implements OnInit {
         GAME_STATE.heroCooldown -= dt;
       }
 
-      const hero:HTMLElement = document.querySelector(".hero");
+      const hero: HTMLElement = document.querySelector(".hero");
       setPosition(hero, GAME_STATE.heroX, GAME_STATE.heroY);
     }
 
     //Weapon logic
-    function createRocket($container:HTMLElement, x, y) {
+    function createRocket($container, x, y) {
       const $element = document.createElement("img");
       $element.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/rocket.png?raw=true";
       $element.className = "rocket";
       $element.style.width = "10px";
       $element.style.marginLeft = "-2.5px";
+      $element.style.position = "absolute";
       $container.appendChild($element);
-      const rocket = { 
+      const rocket = {
         x,
         y,
-        $element };
+        $element
+      };
       GAME_STATE.rockets.push(rocket);
       setPosition($element, x, y);
-      console.log("hero rocket: " + x +" Hero pos: " + GAME_STATE.heroX);
+      console.log("hero rocket: " + x + " Hero pos: " + GAME_STATE.heroX);
     }
 
-    function updateRockets(dt, $container:HTMLElement) {
+    function updateRockets(dt, $container) {
       const rockets = GAME_STATE.rockets;
       for (let i = 0; i < rockets.length; i++) {
         const rocket = rockets[i];
@@ -165,17 +168,18 @@ export class GameComponent implements OnInit {
       GAME_STATE.rockets = GAME_STATE.rockets.filter(e => !e.isDead);
     }
 
-    function destroyRocket($container:HTMLElement, rocket) {
+    function destroyRocket($container, rocket) {
       $container.removeChild(rocket.$element);
       rocket.isDead = true;
     }
 
     //Enemy logic
-    function createEnemy($container:HTMLElement, x, y) {
+    function createEnemy($container, x, y) {
       const $element = document.createElement("img");
       $element.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/alien1.png?raw=true";
-      $element.className = "enemy"
+      $element.className = "enemy";
       $element.style.width = "30px";
+      $element.style.position = "absolute";
       $container.appendChild($element);
       const enemy = {
         x, y, cooldown: rand(0.5, ENEMY_COOLDOWN),
@@ -185,7 +189,7 @@ export class GameComponent implements OnInit {
       setPosition($element, x, y);
     }
 
-    function updateEnemy(dt, $container:HTMLElement ) {
+    function updateEnemy(dt, $container) {
 
       //enemy round similar movment
       const dx = Math.sin(GAME_STATE.lastTime / 2500) * 30; // left-right movement
@@ -196,6 +200,7 @@ export class GameComponent implements OnInit {
         const enemy = enemies[i];
         const x = enemy.x + dx;
         const y = enemy.y + dy;
+        console.log("Enemy: " + enemies[i] + "POosition x,y: " + x + " " + y);
         setPosition(enemy.$element, x, y);
         enemy.cooldown -= dt;
         if (enemy.cooldown <= 0) {
@@ -206,26 +211,27 @@ export class GameComponent implements OnInit {
       GAME_STATE.enemies = GAME_STATE.enemies.filter(e => !e.isDead);
     }
 
-    function destroyEnemy($container:HTMLElement , enemy) {
+    function destroyEnemy($container, enemy) {
       setScore(ENEMY_POINTS);
       $container.removeChild(enemy.$element);
       enemy.isDead = true;
     }
 
     //Enemy weapon logic
-    function createEnemyRocket($container: HTMLElement , x, y) {
+    function createEnemyRocket($container, x, y) {
       const $element = document.createElement("img");
       $element.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/enemyRocket.png?raw=true";
       $element.className = "enemy-laser";
       $element.style.width = "10px";
       $element.style.marginLeft = "-2.5px";
+      $element.style.position = "absolute";
       $container.appendChild($element);
       const rocket = { x, y, $element };
       GAME_STATE.enemyRockets.push(rocket);
       setPosition($element, x, y);
     }
 
-    function updateEnemyRockets(dt, $container:HTMLElement ) {
+    function updateEnemyRockets(dt, $container) {
       const rockets = GAME_STATE.enemyRockets;
       for (let i = 0; i < rockets.length; i++) {
         const rocket = rockets[i];
@@ -248,17 +254,17 @@ export class GameComponent implements OnInit {
 
     //main game engine logic part
     function init() {
-      const $container:HTMLElement  = document.querySelector(".game");
+      const $container: HTMLElement = document.querySelector(".game");
       createHero($container);
 
       const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 1.1) / (ENEMIES_PER_ROW - 1);
-      console.log("Spacing: "+enemySpacing);
+      console.log("Spacing: " + enemySpacing);
       for (let j = 0; j < 3; j++) {
         const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
-        console.log("Position y: "+y + "; Iteration j: "+j );
+        console.log("Position y: " + y + "; Iteration j: " + j);
         for (let i = 0; i < ENEMIES_PER_ROW; i++) {
           const x = i * enemySpacing + ENEMY_HORIZONTAL_PADDING;
-          console.log("Position x: "+x +"; Iteration i: "+i);
+          console.log("Position x: " + x + "; Iteration i: " + i);
           createEnemy($container, x, y);
         }
       }
@@ -282,7 +288,7 @@ export class GameComponent implements OnInit {
         return;
       }
 
-      const $container:HTMLElement  = document.querySelector(".game");
+      const $container: HTMLElement = document.querySelector(".game");
       updateHero(dt, $container);
       updateRockets(dt, $container);
       updateEnemy(dt, $container);
