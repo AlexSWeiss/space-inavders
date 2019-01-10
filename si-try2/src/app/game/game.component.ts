@@ -16,20 +16,20 @@ export class GameComponent implements OnInit {
     const KEY_CODE_SPACE = 32;
 
     //game window settings
-    const GAME_WIDTH:number = 650;
-    const GAME_HEIGHT:number = 600;
+    const GAME_WIDTH = 700;
+    const GAME_HEIGHT = 600;
 
     //hero settings
-    const hero_WIDTH = 50;
+    const hero_WIDTH = 40;
     const hero_MAX_SPEED = 450.0;
     const rocket_MAX_SPEED = 300.0;
     const rocket_COOLDOWN = 0.5;
 
     //enemies settings
-    const ENEMIES_PER_ROW = 10;
-    const ENEMY_HORIZONTAL_PADDING = 50;
-    const ENEMY_VERTICAL_PADDING = 70;
-    const ENEMY_VERTICAL_SPACING = 80;
+    const ENEMIES_PER_ROW = 8;
+    const ENEMY_HORIZONTAL_PADDING = 20;
+    const ENEMY_VERTICAL_PADDING = 40;
+    const ENEMY_VERTICAL_SPACING = 60;
     const ENEMY_COOLDOWN = 5.0;
     const ENEMY_POINTS = 20;
 
@@ -82,8 +82,10 @@ export class GameComponent implements OnInit {
       GAME_STATE.heroX = GAME_WIDTH / 2;
       GAME_STATE.heroY = GAME_HEIGHT - 50;
       const $hero = document.createElement("img");
-      $hero.src = "./Assets/Sprites/hero.png";
+      $hero.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/hero.png?raw=true";
       $hero.className = "hero"
+      $hero.style.width = "40px";
+      $hero.style.marginLeft = "-20px";
       $container.appendChild($hero);
       setPosition($hero, GAME_STATE.heroX, GAME_STATE.heroY)
     }
@@ -124,8 +126,10 @@ export class GameComponent implements OnInit {
     //Weapon logic
     function createRocket($container:HTMLElement, x, y) {
       const $element = document.createElement("img");
-      $element.src = "./Assets/Sprites/rocket.png";
+      $element.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/rocket.png?raw=true";
       $element.className = "rocket";
+      $element.style.width = "10px";
+      $element.style.marginLeft = "-2.5px";
       $container.appendChild($element);
       const rocket = { 
         x,
@@ -133,6 +137,7 @@ export class GameComponent implements OnInit {
         $element };
       GAME_STATE.rockets.push(rocket);
       setPosition($element, x, y);
+      console.log("hero rocket: " + x +" Hero pos: " + GAME_STATE.heroX);
     }
 
     function updateRockets(dt, $container:HTMLElement) {
@@ -168,8 +173,9 @@ export class GameComponent implements OnInit {
     //Enemy logic
     function createEnemy($container:HTMLElement, x, y) {
       const $element = document.createElement("img");
-      $element.src = "./Assets/Sprites/alien1.png";
+      $element.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/alien1.png?raw=true";
       $element.className = "enemy"
+      $element.style.width = "30px";
       $container.appendChild($element);
       const enemy = {
         x, y, cooldown: rand(0.5, ENEMY_COOLDOWN),
@@ -182,8 +188,8 @@ export class GameComponent implements OnInit {
     function updateEnemy(dt, $container:HTMLElement ) {
 
       //enemy round similar movment
-      const dx = Math.sin(GAME_STATE.lastTime / 1000) * 30; // left-right movement
-      const dy = Math.cos(GAME_STATE.lastTime / 1000) * 20; // up-down movement
+      const dx = Math.sin(GAME_STATE.lastTime / 2500) * 30; // left-right movement
+      const dy = Math.cos(GAME_STATE.lastTime / 2000) * 20; // up-down movement
 
       const enemies = GAME_STATE.enemies;
       for (let i = 0; i < enemies.length; i++) {
@@ -209,8 +215,10 @@ export class GameComponent implements OnInit {
     //Enemy weapon logic
     function createEnemyRocket($container: HTMLElement , x, y) {
       const $element = document.createElement("img");
-      $element.src = "./Assets/Sprites/enemyRocket.png";
+      $element.src = "https://github.com/AlexSWeiss/space-inavders/blob/master/si-try2/src/app/game/Assets/Sprites/enemyRocket.png?raw=true";
       $element.className = "enemy-laser";
+      $element.style.width = "10px";
+      $element.style.marginLeft = "-2.5px";
       $container.appendChild($element);
       const rocket = { x, y, $element };
       GAME_STATE.enemyRockets.push(rocket);
@@ -243,11 +251,14 @@ export class GameComponent implements OnInit {
       const $container:HTMLElement  = document.querySelector(".game");
       createHero($container);
 
-      const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 1.2) / (ENEMIES_PER_ROW - 1);
+      const enemySpacing = (GAME_WIDTH - ENEMY_HORIZONTAL_PADDING * 1.1) / (ENEMIES_PER_ROW - 1);
+      console.log("Spacing: "+enemySpacing);
       for (let j = 0; j < 3; j++) {
         const y = ENEMY_VERTICAL_PADDING + j * ENEMY_VERTICAL_SPACING;
+        console.log("Position y: "+y + "; Iteration j: "+j );
         for (let i = 0; i < ENEMIES_PER_ROW; i++) {
           const x = i * enemySpacing + ENEMY_HORIZONTAL_PADDING;
+          console.log("Position x: "+x +"; Iteration i: "+i);
           createEnemy($container, x, y);
         }
       }
